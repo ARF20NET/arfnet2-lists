@@ -36,84 +36,84 @@ class mlmmj
     var $errors;
 
     function is_email($string="") {
-	    return eregi("^[a-z0-9\._-]+".chr(64)."+[a-z0-9\._-]+\.+[a-z]{2,4}$", $string); 
-	}
+        return filter_var($string, FILTER_VALIDATE_EMAIL);
+    }
 
     function error($string="") {
-	    $this->errors = TRUE;
-	    die($string);
-	}
+        $this->errors = TRUE;
+        die($string);
+    }
 
-    function mlmmj() {
-	    // set mandatory vars...
-	    $this->errors = FALSE;
-	    $this->delimiter = "+";
+    function __construct() {
+        // set mandatory vars...
+        $this->errors = FALSE;
+        $this->delimiter = "+";
 
-	    if (!isset($_POST["email"]) &&
-		!isset($_POST["mailinglist"]) &&
-		!isset($_POST["job"]) &&
-		!isset($_POST["redirect_success"]) &&
-		!isset($_POST["redirect_failure"]))
-	    {
-			$this->errors = TRUE;
-			if(isset($_POST["redirect_failure"])) {
-				header("Location: ".$_POST["redirect_failure"]);
-				exit;
-			}
-			else
-				die("An error occurred. Please check contrib/web/php-user/README for details.");
-	    }
-	    else {
-			if ($this->is_email($_POST["email"]))
-				$this->email = $_POST["email"];
-			else
-				$this->error("ERROR: email is not a valid email address.");
+        if (!isset($_POST["email"]) &&
+        !isset($_POST["mailinglist"]) &&
+        !isset($_POST["job"]) &&
+        !isset($_POST["redirect_success"]) &&
+        !isset($_POST["redirect_failure"]))
+        {
+            $this->errors = TRUE;
+            if(isset($_POST["redirect_failure"])) {
+                header("Location: ".$_POST["redirect_failure"]);
+                exit;
+            }
+            else
+                die("An error occurred. Please check contrib/web/php-user/README for details.");
+        }
+        else {
+            if ($this->is_email($_POST["email"]))
+                $this->email = $_POST["email"];
+            else
+                $this->error("ERROR: email is not a valid email address.");
 
-			if ($this->is_email($_POST["mailinglist"]))
-				$this->mailinglist = $_POST["mailinglist"];
-			else
-				$this->error("ERROR: mailinglist is not a valid email address.");
-			
-			$this->job = $_POST["job"];
-		
-			if (!(($this->job == "subscribe") OR ($this->job == "unsubscribe"))) {
-				$this->error("ERROR: job unknown.");
-			}
-			
-			$this->redirect_failure = $_POST["redirect_failure"];
-			$this->redirect_success = $_POST["redirect_success"];
+            if ($this->is_email($_POST["mailinglist"]))
+                $this->mailinglist = $_POST["mailinglist"];
+            else
+                $this->error("ERROR: mailinglist is not a valid email address.");
+            
+            $this->job = $_POST["job"];
+        
+            if (!(($this->job == "subscribe") OR ($this->job == "unsubscribe"))) {
+                $this->error("ERROR: job unknown.");
+            }
+            
+            $this->redirect_failure = $_POST["redirect_failure"];
+            $this->redirect_success = $_POST["redirect_success"];
 
-	    }
+        }
 
-	    // now we should try to go ahead and {sub,unsub}scribe... ;)
+        // now we should try to go ahead and {sub,unsub}scribe... ;)
 
-	    if(!$this->errors) {
-			// @ ^= char(64)
-			
-			$to = str_replace(chr(64),$this->delimiter.$this->job.chr(64),$this->mailinglist);
-			$subject = $this->job." to ".$this->mailinglist;
-			$body = $this->job;
-			$addheader = "";
-			$addheader .= "Received: from ". $_SERVER["REMOTE_ADDR"]
-				." by ". $_SERVER["SERVER_NAME"]. " with HTTP;\r\n\t".date("r")."\n";
-			$addheader .= "X-Originating-IP: ".$_SERVER["REMOTE_ADDR"]."\n";
-			$addheader .= "X-Mailer: mlmmj-webinterface powered by PHP/". phpversion() ."\n";
-			$addheader .= "From: ".$this->email."\n";
-			$addheader .= "Cc: ".$this->email."\n";
-			
-			if(!mail($to, $subject, $body, $addheader))
-				$this->error($this->job." failed.");
-	    }
+        if(!$this->errors) {
+            // @ ^= char(64)
+            
+            $to = str_replace(chr(64),$this->delimiter.$this->job.chr(64),$this->mailinglist);
+            $subject = $this->job." to ".$this->mailinglist;
+            $body = $this->job;
+            $addheader = "";
+            $addheader .= "Received: from ". $_SERVER["REMOTE_ADDR"]
+                ." by ". $_SERVER["SERVER_NAME"]. " with HTTP;\r\n\t".date("r")."\n";
+            $addheader .= "X-Originating-IP: ".$_SERVER["REMOTE_ADDR"]."\n";
+            $addheader .= "X-Mailer: mlmmj-webinterface powered by PHP/". phpversion() ."\n";
+            $addheader .= "From: ".$this->email."\n";
+            $addheader .= "Cc: ".$this->email."\n";
+            
+            if(!mail($to, $subject, $body, $addheader))
+                $this->error($this->job." failed.");
+        }
 
-	    if($this->errors) {
-			//header("Location: ".$this->redirect_failure);
-			//exit;
-			die($this->errors);
-	    } else {
-			header("Location: ".$this->redirect_success);
-			exit;
-	    }
-	}
+        if($this->errors) {
+            //header("Location: ".$this->redirect_failure);
+            //exit;
+            die("Error: ".$this->errors);
+        } else {
+            header("Location: ".$this->redirect_success);
+            exit;
+        }
+    }
 }
 
 

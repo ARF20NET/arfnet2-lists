@@ -30,7 +30,6 @@ $domain = "arf20.com"
                 <form action="mlmmj.php" method="post">
                     <label>Email</label><br>
                     <input type="email" name="email">
-                    <span class="help-block"><?php echo $email_err; ?></span><br>                    
                     <input name="mailinglist" type="hidden" value="<?php echo $list."@".$domain; ?>">
                     <input name="job" type="hidden" value="subscribe">
                     <input name="redirect_failure" type="hidden" value="/error.html"> 
@@ -42,7 +41,6 @@ $domain = "arf20.com"
                 <form action="mlmmj.php" method="post">
                     <label>Email</label><br>
                     <input type="email" name="email">
-                    <span class="help-block"><?php echo $email_err; ?></span><br>                    
                     <input name="mailinglist" type="hidden" value="<?php echo $list."@".$domain; ?>">
                     <input name="job" type="hidden" value="unsubscribe">
                     <input name="redirect_failure" type="hidden" value="/error.html"> 
