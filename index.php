@@ -29,6 +29,12 @@ $lists = array_diff($lists, array(".", ".."));
                         }
                     ?>
                     </ul>
+                    <hr>
+                    <h2>Subscription</h2>
+                    <ul>
+                        <li>To subscribe to a list, send a message to list+subscribe@arf20.com or go to https://lists.arf20.com/subscribe.php?list=list</li>
+                        <li>To unsubscribe, send a message to list+unsubscribe@arf20.com or go to https://lists.arf20.com/subscribe.php?list=list</li>
+                    </ul>
                 </div>
             </div>
         </main>
