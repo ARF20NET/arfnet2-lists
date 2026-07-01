@@ -24,6 +24,8 @@
 
 // error_reporting(E_ALL);
 
+require 'CaptchasDotNet.php';
+
 class mlmmj
 {
     var $email;
@@ -53,7 +55,9 @@ class mlmmj
         !isset($_POST["mailinglist"]) &&
         !isset($_POST["job"]) &&
         !isset($_POST["redirect_success"]) &&
-        !isset($_POST["redirect_failure"]))
+        !isset($_POST["redirect_failure"]) &&
+        !isset($_POST["random"])) &&
+        !isset($_POST["captcha"]))
         {
             $this->errors = TRUE;
             if(isset($_POST["redirect_failure"])) {
@@ -64,6 +68,28 @@ class mlmmj
                 die("An error occurred. Please check contrib/web/php-user/README for details.");
         }
         else {
+            $captchas = new CaptchasDotNet ('arf20', '7QOD8AEp5n9ib5bp',
+                '/tmp/captchasnet-random-strings','3600',
+                'abcdefghkmnopqrstuvwxyz','6',
+                '240','80','000088');
+
+            // Check the random string to be valid and return an error message
+            // otherwise.
+            if (!$captchas->validate ($random_string))
+            {
+                $this->error(
+                    "The session key (random) does not exist, please go back and reload form.<br/>"
+                    ."In case you are the administrator of this page, "
+                    ."please check if random keys are stored correct.<br/>"
+                    ."See http://captchas.net/sample/php/ 'Problems with save mode'");
+            }
+            // Check, that the right CAPTCHA password has been entered and
+            // return an error message otherwise.
+            elseif (!$captchas->verify ($password))
+            {
+                $this->error("You entered the wrong password. Aren't you human? Please use back button and reload.";
+            }
+
             if ($this->is_email($_POST["email"]))
                 $this->email = $_POST["email"];
             else
