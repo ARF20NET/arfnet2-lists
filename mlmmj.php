@@ -56,7 +56,7 @@ class mlmmj
         !isset($_POST["job"]) &&
         !isset($_POST["redirect_success"]) &&
         !isset($_POST["redirect_failure"]) &&
-        !isset($_POST["random"])) &&
+        !isset($_POST["random"]) &&
         !isset($_POST["captcha"]))
         {
             $this->errors = TRUE;
@@ -75,7 +75,7 @@ class mlmmj
 
             // Check the random string to be valid and return an error message
             // otherwise.
-            if (!$captchas->validate ($random_string))
+            if (!$captchas->validate ($_POST["random"]))
             {
                 $this->error(
                     "The session key (random) does not exist, please go back and reload form.<br/>"
@@ -85,7 +85,7 @@ class mlmmj
             }
             // Check, that the right CAPTCHA password has been entered and
             // return an error message otherwise.
-            elseif (!$captchas->verify ($password))
+            elseif (!$captchas->verify ($_POST["captcha"]))
             {
                 $this->error("You entered the wrong password. Aren't you human? Please use back button and reload.";
             }

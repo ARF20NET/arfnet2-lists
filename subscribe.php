@@ -49,13 +49,14 @@ $domain = "arf20.com"
                 <h2>Unsubscription</h2>
                 <form action="mlmmj.php" method="post">
                     <label>Email</label><br>
-                    <input type="email" name="email">
+                    <input type="email" name="email"><br>
                     <input name="mailinglist" type="hidden" value="<?php echo $list."@".$domain; ?>">
                     <input name="job" type="hidden" value="unsubscribe">
                     <input name="redirect_failure" type="hidden" value="/error.html"> 
                     <input name="redirect_success" type="hidden" value="/">
                     <input type="hidden" name="random" value="<?= $captchas->random () ?>" />
-                    <input name="captcha" size="6" />
+                    <label>Captcha</label><br>
+                    <input name="captcha" size="6" /><br>
                     <br><input type="submit" value="Subscribe">
                 </form>
                 <?= $captchas->image () ?> <a href="javascript:captchas_image_reload('captchas.net')">Reload Image</a>
