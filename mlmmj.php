@@ -87,7 +87,7 @@ class mlmmj
             // return an error message otherwise.
             elseif (!$captchas->verify ($_POST["captcha"]))
             {
-                $this->error("You entered the wrong password. Aren't you human? Please use back button and reload.";
+                $this->error("You entered the wrong password. Aren't you human? Please use back button and reload.");
             }
 
             if ($this->is_email($_POST["email"]))
